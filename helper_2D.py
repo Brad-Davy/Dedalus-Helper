@@ -1,9 +1,12 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import os 
 
 
 class IO:
+    
+    "Class which deals with the input and output of raw data, writing/reading them to text files e.c.t"
     
     def __init__(self):
         
@@ -68,6 +71,8 @@ class IO:
 
 class Data:
     
+    " Class which deals with data in the form of 2d numpy arrays, i.e. a single time step of the solution "
+    
     def __init__(self,data):
         
         self.data = data
@@ -81,6 +86,7 @@ class Data:
         
         self.data = np.rot90(self.data, k=1, axes=(0, 1))
         plt.imshow(self.data,cmap='coolwarm')
+        #matplotlib.pyplot.clim(0, 0.5)
         plt.colorbar()
         plt.show()
         
@@ -118,22 +124,6 @@ class Data:
             plt.ylabel('Temperature')
             
             return array
-            
-
-    def determine_nusselt_number(self):
-        
-        " Function which returns the noussalt number of a given RB simulation "
-        " Nousselt number is given by: Nu = hL/k_f"
-        " h = convective heat transfer coefficient, L = charecteristic length, k_f = thermal conductivity "
-        
-        np.average(np.average(self.data[0]))
-        
-        
-        return nousselt_number  
-
-        
-    def get_nusselt_number(self):
-        return self.nusselt_number
 
 
     def get_average_temperature(self):
@@ -147,7 +137,44 @@ class Data:
 
 
 
-
+class RawData:
+    
+    " A class which deals with multiple timesteps, takes data in the form of the 3D array of 2D time steps. "
+    
+    def __init__(self, data):
+        self.data = data
+        
+    def return_timestep(self, index):
+        return self.data[index]
+    
+    
+    def determine_average(self,line_data):
+        plt.plot(line_data)
+    
+    def determine_heat_flux(self):
+        
+        " Function which returns the noussalt number of a given RB simulation "
+        " Nousselt number is given by: Nu = hL/k_f"
+        " h = convective heat transfer coefficient, L = charecteristic length, k_f = thermal conductivity "
+        " Expects to get the dT/dz data at the boundary "
+        
+        temp_flux = []
+        
+        for lines in self.data:
+            temp_flux.append(np.average(lines[0]))
+            
+        average = self.determine_average(temp_flux)
+            
+        return average 
+    
+    
+class ForceBalance:
+    
+    def __init__(self):
+        pass
+    
+    
+    
 
 
 
