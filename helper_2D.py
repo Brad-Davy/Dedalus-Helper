@@ -83,7 +83,19 @@ class Data:
         plt.imshow(self.data,cmap='coolwarm')
         plt.colorbar()
         plt.show()
-
+        
+    def save_temperature_plot(self, file_name):
+        
+        " Saves a nice image of the plot as .eps file which can be used in latex"
+        
+        fig = plt.figure(figsize = (5,5))
+        self.data = np.rot90(self.data, k=1, axes=(0, 1))
+        plt.imshow(self.data,cmap='coolwarm',interpolation = 'bicubic')
+        plt.colorbar()
+        plt.rcParams['font.family'] = 'Serif'
+        plt.rcParams['font.size'] = 18
+        plt.rcParams['axes.linewidth'] = 2
+        fig.savefig(file_name)
 
     def plot_line(self,position, row = True):
         
@@ -129,7 +141,6 @@ class Data:
     
     
     def get_heat_transfer(self):
-        
         
         return np.average(self.data[0])
 
