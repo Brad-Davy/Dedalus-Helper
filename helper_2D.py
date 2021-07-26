@@ -15,7 +15,7 @@ class IO:
         
 
     
-    def test_float(self,datum,suppress_print = True):
+    def test_float(self, datum: float,suppress_print: bool = True) -> 'bollean':
         
         " Tests if the data passed in is a float. "
         
@@ -32,7 +32,7 @@ class IO:
             
         
             
-    def convert_txt_np(self,file_name):
+    def convert_txt_np(self,file_name : str) -> 'numpy array':
         
         " Converts a txt file to a numpy array to plot with. "
         
@@ -52,7 +52,7 @@ class IO:
         return two_data
     
     
-    def convert_np_txt(self, array, file_name):
+    def convert_np_txt(self, array: list, file_name: str) -> 'text file':
         
         " Should be a 2d numpy array which is written to a text file in a manner which can be easily read. "
         
@@ -73,7 +73,7 @@ class Data:
     
     " Class which deals with data in the form of 2d numpy arrays, i.e. a single time step of the solution "
     
-    def __init__(self,data):
+    def __init__(self,data) -> 'init':
         
         self.data = data
         self.nusselt_number = 1
@@ -90,7 +90,7 @@ class Data:
         plt.colorbar()
         plt.show()
         
-    def save_temperature_plot(self, file_name):
+    def save_temperature_plot(self, file_name: str) -> 'matplotlib figure':
         
         " Saves a nice image of the plot as .eps file which can be used in latex"
         
@@ -103,7 +103,7 @@ class Data:
         plt.rcParams['axes.linewidth'] = 2
         fig.savefig(file_name)
 
-    def plot_line(self,position, row = True):
+    def plot_line(self,position: int, row: bool = True) -> 'list':
         
         " Plots a line of a given position accross the domain. "
         
@@ -179,7 +179,8 @@ class ForceBalance:
 
 
 
-
+IO = IO()
+print(IO.test_float.__annotations__)
 
 
 
