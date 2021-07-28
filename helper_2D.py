@@ -131,7 +131,6 @@ class Data:
     
     
     def get_heat_transfer(self):
-        
         return np.average(self.data[0])
 
 
@@ -170,22 +169,37 @@ class RawData:
     
 class ForceBalance:
     
-    def __init__(self):
-        pass
+    def __init__(self, data) ->  'Init':
+        self.data = data
+    
+    @staticmethod
+    def _internal_method():
+        " Cant access class atributes, `dosnt take any arguments"
     
     
+    def run_function(func) -> 'Runs Fucntions':
+        
+        def wrapper(*args, **kwargs):
+            print('Started')
+            func(*args, **kwargs)
+            print('Ended')
+            
+        return wrapper
     
+    
+    @run_function
+    def _temperature_flux_plot(self, i: float) -> 'Line plot':
+        
+        ' Evaluates the temperature flux at the top and bottom boundary, the sum of which should be 0. '
+        
+        for lines in self.data:
+            print(lines)
 
 
 
-
-IO = IO()
-print(IO.test_float.__annotations__)
-
-
-
-
-
+fb = ForceBalance([1,2,3])
+fb._temperature_flux_plot(1.3)
+fb._internal_method()
 
 
 
