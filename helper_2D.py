@@ -197,14 +197,6 @@ class ForceBalance:
 
 
 
-fb = ForceBalance([1,2,3])
-fb._temperature_flux_plot(1.3)
-fb._internal_method()
-
-
-
-
-
 
 
 
