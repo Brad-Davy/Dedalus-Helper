@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import os 
-
+import os
 
 class IO:
     
@@ -32,14 +31,14 @@ class IO:
             
         
             
-    def convert_txt_np(self,file_name : str) -> 'numpy array':
+    def convert_txt_np(self,file_path: str) -> 'numpy array':
         
         " Converts a txt file to a numpy array to plot with. "
         
         index = 0
         one_data = []
         two_data = []
-        data  = open(file_name,'r').read().split('\n')
+        data  = open(file_path,'r').read().split('\n')
         for lines in data:
             for numbers in lines.split(','):
                 
@@ -52,21 +51,34 @@ class IO:
         return two_data
     
     
-    def convert_np_txt(self, array: list, file_name: str) -> 'text file':
+    def check_file(func) -> 'Checks the file exists':
         
-        " Should be a 2d numpy array which is written to a text file in a manner which can be easily read. "
+        def wrapper(*args,**kwargs):
         
-        file = open(file_name,'a')
+            if os.path.exists(kwargs.get('file_path')):
+                func(*args, **kwargs)
+            else:
+                os.system('mkdir ' + os.path.dirname(kwargs.get('file_path')))
+                func(*args, **kwargs)
+        return wrapper
+    
+    
+    @check_file
+    def convert_np_txt(self, array: list, file_path: str) -> 'text file':
+        
+        """ Should be a 2d numpy array which is written to a text file in a manner which can be easily read. """
+        
+
+        file = open(file_path,'a')
         file.truncate(0) ## clears the file contents if there is any ##
         for lines in array:
             for numbers in lines:
                 file.write(str(numbers)+',')
             file.write('\n')
-            
-        file_path = os.getcwd()+'/'+file_name
+        
         print('The file is saved in directory {directory}'.format(directory = file_path))
         return file_path
-              
+        
 
 
 class Data:
@@ -86,7 +98,6 @@ class Data:
         
         self.data = np.rot90(self.data, k=1, axes=(0, 1))
         plt.imshow(self.data,cmap='coolwarm')
-        #matplotlib.pyplot.clim(0, 0.5)
         plt.colorbar()
         plt.show()
         
@@ -134,6 +145,14 @@ class Data:
         return np.average(self.data[0])
 
 
+    def return_average(self):
+    
+        " Returns the average of a 2D array. "
+    
+        AVG = []
+        for lines in self.data:
+            AVG.append(np.average(lines))
+        return np.average(AVG)
 
 
 class RawData:
