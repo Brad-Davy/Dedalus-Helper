@@ -109,7 +109,7 @@ class Data(base):
         plt.imshow(self.data,cmap='coolwarm',interpolation = 'bicubic')
         plt.rcParams['font.family'] = 'Serif'
         plt.rcParams['font.size'] = 18
-        #plt.colorbar()
+        plt.colorbar()
         plt.show()
         
     @base.check_file
@@ -165,7 +165,8 @@ class Data(base):
         for lines in self.data:
             AVG.append(np.average(lines))
         return np.average(AVG)
-
+        
+        
 
 class RawData(base):
     

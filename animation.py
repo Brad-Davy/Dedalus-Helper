@@ -12,7 +12,7 @@ class animation:
     
         
         
-    def create_images(self):
+    def create_images(self) -> 'Out Images':
     
         " Given the time dependent data this function saves them as images "
 
@@ -55,7 +55,7 @@ class animation:
         self.data.append(new_data)
     
     
-    def create_animation(self):
+    def create_animation(self) -> 'Out .gif':
     
         " Creates a gif from the images generated "
     
