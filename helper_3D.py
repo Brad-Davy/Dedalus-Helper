@@ -8,6 +8,7 @@ Created on Tue Jul 20 14:45:26 2021
 import numpy as np
 from DedalusHelper.helper_2D import Data as Data2D
 import sys,os
+import matplotlib.pyplot as plt
 #sys.path.append(os.getcwd()) Append the current working directory to path
 
 
@@ -39,4 +40,55 @@ class Data:
         data = Data2D(data)
         data.temperature_plot()
         
-jack smells
+class plotting:
+
+    def __init__(self):
+        pass
+        
+    def vector_plot(self, temperature, u, v, w, time_step,aspect_ratio):
+    
+        " Makes a 3d plot of the the field, surface top and bottom. "
+          
+        max_u = np.amax(u)
+        u = u[time_step]
+        v = v[time_step]
+        w = w[time_step]
+        t = temperature[time_step]
+        
+        
+        
+        
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        
+        # Make the grid
+        x, y, z = np.meshgrid(np.linspace(0, 2*np.pi,32),
+                              np.linspace(0, 2*np.pi,32),
+                              np.linspace(0, 1, 16))
+        
+        ax.set_box_aspect(aspect_ratio)
+        
+        
+        def cstm_autumn_r(x):
+            return plt.cm.coolwarm((np.clip(x,2,10)-2)/8.)
+        
+        def color_quiver_plot(scale,sparcity):
+            for i in range(0,np.shape(u)[0],16):
+                i=16
+                for j in range(0,np.shape(u)[1]):
+                    for k in range(0,np.shape(u)[2]):
+                            #length = np.sqrt(u[i,j,k]**2 + v[i,j,k]**2 + w[i,j,k]**2)
+                            length = t[i,j,k]
+                            ax.quiver(x[i,j,k], y[i,j,k], z[i,j,k], u[i,j,k]/(scale*max_u), v[i,j,k]/(scale*np.amax(v)),
+                                      w[i,j,k]/(scale*np.amax(w)), color = cstm_autumn_r(length*100),linewidth = 1)
+        
+        plt.contourf(x[:,:,-1],y[:,:,-1],1 + t[:,:,-1],100,cmap = 'coolwarm', alpha =0.2)
+        plt.contourf(x[:,:,0],y[:,:,0],t[:,:,0],100, cmap = 'coolwarm', alpha = 1)
+        color_quiver_plot(4,4)
+            
+        
+        
+        
+        
+        
+        
