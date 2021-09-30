@@ -24,11 +24,40 @@ class spectral_helper:
             
         
     def temperature_plot(self):
-        
-        plotting_data = np.real(self.data)
+        print(self.data.max())
+        plotting_data = abs(np.real(self.data))
         plotting_data = np.rot90(plotting_data, k=1, axes=(0, 1))
         plt.imshow(plotting_data,cmap='coolwarm',interpolation = 'bicubic')
         plt.rcParams['font.family'] = 'Serif'
         plt.rcParams['font.size'] = 18
         plt.colorbar()
         plt.show()
+
+
+    def average_over_z(self):
+    
+        " Averages over the z domain. "
+    
+        data = abs(np.real(self.data))
+        array = []
+       
+        for lines in data:
+            
+            array.append(np.average(lines))
+            
+        return array
+        
+        
+    def average_over_x(self):
+    
+        " Averages over the z domain. "
+    
+        data = abs(np.real(self.data))
+        data = np.rot90(data, k=1, axes=(0, 1))
+        array = []
+       
+        for lines in data:
+            
+            array.append(np.average(lines))
+            
+        return array

@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import os
+from matplotlib import cm
 
 
 class base:
@@ -112,6 +113,30 @@ class Data(base):
         plt.colorbar()
         plt.show()
         
+        
+    def return_shape(self):
+        
+        " Returns the shape of the data. "
+        
+        return np.shape(self.data)
+        
+        
+        
+    def return_viscous_boundary_layer(self) -> 'Viscous Boundary':
+    
+        " Returns the viscous boundary layer. "
+        Average = []
+        for lines in np.rot90(self.data, k=1, axes=(0, 1)):
+            Average.append(np.average(abs(lines)))
+            
+        plt.plot(Average,color = 'black')
+        plt.ylim(0,800)
+        plt.show()
+        return Average
+            
+    
+    
+        
     @base.check_file
     def save_temperature_plot(self, file_path: str) -> 'matplotlib figure':
         
@@ -166,6 +191,26 @@ class Data(base):
             AVG.append(np.average(lines))
         return np.average(AVG)
         
+    def rotate_data(self):
+        
+        " Returns the data. "
+        
+        return np.rot90(self.data, k=1, axes=(0, 1))
+        
+    def surface_plot(self):
+        
+        " Creates a surface plot. Creates a 3d plot which should only be used at the end of a run. "
+        
+        fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+        shape_x, shape_y = np.shape(self.data)
+        x,y = np.meshgrid(np.linspace(0,2*np.pi,shape_x), np.linspace(0,2*np.pi,shape_y))
+        print(x)
+        surf = ax.plot_surface(x, y, self.data, cmap=cm.coolwarm,
+                       linewidth=0, antialiased=False)
+        plt.show()
+        
+    def return_data(self):
+        return self.data
         
 
 class RawData(base):

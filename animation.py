@@ -5,7 +5,7 @@ import os
 
 class animation:
     
-    def __init__(self, data):
+    def __init__(self, data, fig):
         self.data = data
         os.system('rm -r /opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img')
         os.system('mkdir /opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img')
@@ -25,9 +25,6 @@ class animation:
                 file_path = '/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img/00{counter}.png'.format(counter = counter)
             else:
                 file_path = '/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img/0{counter}.png'.format(counter = counter)
-            fig = plt.figure()
-            lines = np.rot90(lines, k=1, axes=(0, 1))
-            plt.imshow(lines,cmap='coolwarm',interpolation = 'bicubic')
             fig.savefig(file_path, dpi = 600)
             counter = counter + 1
                 
