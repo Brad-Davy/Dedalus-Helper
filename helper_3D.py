@@ -39,3 +39,4 @@ class Data:
         data = Data2D(data)
         data.temperature_plot()
         
+jack smells
