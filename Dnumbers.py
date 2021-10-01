@@ -1,5 +1,6 @@
 import numpy as np
 import h5py
+from DedalusHelper.spectral import helper_2d
 
 ## All classes in this module require that the appropriate subsitutions are made when running the simmulations ##
 class Nusselt:
@@ -83,7 +84,6 @@ class Peclet:
     def __init__(self):
         self.NUMBER = 0
         self.time_series = []
-        pass
         
         
     def load_data(self,file_path):
@@ -104,14 +104,12 @@ class Peclet:
             summation = (u**2 + w**2)**0.5
         else:
             raise('Array should be of the form 2D.')
-
         return np.average(summation)
     
 
     def determine_time_series(self,file_path):
     
         u,w = self.load_data(file_path)
-        
         for index in range(np.shape(u)[0]):
             p = self.return_peclet(u[index],w[index])
             self.time_series.append(p)
@@ -127,4 +125,35 @@ class Peclet:
     
         " getter for time_series "
         return self.time_series
+        
+
+
+class KineticEnergy:
+
+    NUMBER = 0
+    time_series = []
+    
+    def __init__(self):
+        self.NUMBER = 0
+        self.time_series = []
+        
+    def load_data(self, file_path):
+        with h5py.File(file_path, mode='r') as file:
+            ## Load data sets ##
+            ke = np.copy(file['tasks']['Kinetic Energy'])
+            
+        return ke
+        
+    def average_over_time(self, file_path):
+        
+        data = self.load_data(file_path)
+        array = np.zeros(np.shape(data)[1])
+        
+        for i in range(np.shape(data)[0]):
+            print(i)
+            kep = helper_2d(data[i,:,:]).average_over_z()
+            array += kep
+        return array/np.shape(data)[0]
+        
+    
         

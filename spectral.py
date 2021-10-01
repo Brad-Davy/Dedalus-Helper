@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 
-class spectral_helper:
+class helper_2d:
 
     " Should take spectral data as self.data "
 
@@ -13,19 +13,19 @@ class spectral_helper:
 
         
     
-    def return_data(self):
+    def get_data(self):
         return self.data
     
-    def return_real_components(self):
+    def return_absolute(self):
     
-        " Convert the data to real data "
+        " Given complex numbers are given by (a + ib), this function returns (a^2 + b^2)"
         
-        return np.real(self.data)
-            
-        
+        absolute = (self.data.real**2 + self.data.imag**2)**0.5
+        return absolute
+    
     def temperature_plot(self):
-        print(self.data.max())
-        plotting_data = abs(np.real(self.data))
+        
+        plotting_data = self.return_absolute()
         plotting_data = np.rot90(plotting_data, k=1, axes=(0, 1))
         plt.imshow(plotting_data,cmap='coolwarm',interpolation = 'bicubic')
         plt.rcParams['font.family'] = 'Serif'
@@ -38,7 +38,7 @@ class spectral_helper:
     
         " Averages over the z domain. "
     
-        data = abs(np.real(self.data))
+        data = self.return_absolute()
         array = []
        
         for lines in data:
@@ -52,7 +52,7 @@ class spectral_helper:
     
         " Averages over the z domain. "
     
-        data = abs(np.real(self.data))
+        data = self.return_absolute()
         data = np.rot90(data, k=1, axes=(0, 1))
         array = []
        
@@ -60,4 +60,63 @@ class spectral_helper:
             
             array.append(np.average(lines))
             
+        return array[::-1]
+        
+
+class helper_3d:
+
+    " Should take spectral data as self.data "
+
+    def __init__(self, data):
+        self.data = data
+
+        
+    
+    def get_data(self):
+        return self.data
+    
+    def return_absolute(self):
+    
+        " Given complex numbers are given by (a + ib), this function returns (a^2 + b^2)"
+        
+        absolute = (self.data.real**2 + self.data.imag**2)**0.5
+        return absolute
+    
+    def temperature_plot(self):
+        
+        plotting_data = self.return_absolute()
+        plotting_data = np.rot90(plotting_data, k=1, axes=(0, 1))
+        plt.imshow(plotting_data,cmap='coolwarm',interpolation = 'bicubic')
+        plt.rcParams['font.family'] = 'Serif'
+        plt.rcParams['font.size'] = 18
+        plt.colorbar()
+        plt.show()
+
+
+    def average_over_z(self):
+    
+        " Averages over the z domain. "
+    
+        data = self.return_absolute()
+        array = []
+       
+        for lines in data:
+            
+            array.append(np.average(lines))
+            
         return array
+        
+        
+    def average_over_x(self):
+    
+        " Averages over the z domain. "
+    
+        data = self.return_absolute()
+        data = np.rot90(data, k=1, axes=(0, 1))
+        array = []
+       
+        for lines in data:
+            
+            array.append(np.average(lines))
+            
+        return array[::-1]
