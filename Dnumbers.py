@@ -9,37 +9,37 @@ class Nusselt:
     NUMBER = 0
     time_series = []
     
-    def __init__(self):
+    def __init__(self, file_path):
         self.NUMBER = 0
         self.time_series = []
-        pass
+        self.file_path = file_path
         
         
-    def load_data(self,file_path):
+    def load_data(self):
     
         from dedalus.tools import post
 
-        with h5py.File(str(file_path), mode='r') as file:
+        with h5py.File(self.file_path, mode='r') as file:
         
             data = np.copy(file['tasks']['Nusselt']) # Load datasets
         return data
     
         
 
-    def determine_time_series(self,file_path):
+    def determine_time_series(self):
     
         " Nusselt number is given by "
         
-        nusselt = self.load_data(file_path)
+        nusselt = self.load_data(self.file_path)
 
         for lines in nusselt:
                 self.time_series.append(np.average(lines))
 
-    def determine_NUMBER(self,file_path):
+    def determine_NUMBER(self):
     
         " Nusselt number is given by "
         
-        self.determine_time_series(file_path) # updates the time series array
+        self.determine_time_series(self.file_path) # updates the time series array
         self.NUMBER = np.average(self.time_series) # Sets the number variable
 
     def get_NUMBER(self):
@@ -81,16 +81,17 @@ class Peclet:
     NUMBER = 0
     time_series = []
     
-    def __init__(self):
+    def __init__(self, file_path):
         self.NUMBER = 0
         self.time_series = []
+        self.file_path = file_path
+    
         
-        
-    def load_data(self,file_path):
+    def load_data(self):
     
         from dedalus.tools import post
 
-        with h5py.File(file_path, mode='r') as file:
+        with h5py.File(self.file_path, mode='r') as file:
             # Load datasets
             u = np.copy(file['tasks']['u'])
             w = np.copy(file['tasks']['w'])
@@ -98,22 +99,26 @@ class Peclet:
         
         
     def return_peclet(self,u,w):
-    
+        
         " Returns a peclet number for a given time step. "
+        
+   
         if len(np.shape(u)) == 2:
-            summation = (u**2 + w**2)**0.5
+            summation = (u**2 + w**2)
+            return np.average(summation)
         else:
-            raise('Array should be of the form 2D.')
-        return np.average(summation)
+            pass
+
+    
     
 
-    def determine_time_series(self,file_path):
+    def determine_time_series(self):
     
-        u,w = self.load_data(file_path)
+        u,w = self.load_data()
         for index in range(np.shape(u)[0]):
             p = self.return_peclet(u[index],w[index])
             self.time_series.append(p)
-        return self.time_series
+        return np.array(self.time_series)
 
     def get_NUMBER(self):
     
@@ -133,27 +138,67 @@ class KineticEnergy:
     NUMBER = 0
     time_series = []
     
-    def __init__(self):
+    def __init__(self, file_path):
         self.NUMBER = 0
         self.time_series = []
+        self.file_path = file_path
         
-    def load_data(self, file_path):
-        with h5py.File(file_path, mode='r') as file:
+        
+    def load_spectral_data(self):
+        with h5py.File(self.file_path, mode='r') as file:
             ## Load data sets ##
-            ke = np.copy(file['tasks']['Kinetic Energy'])
+            ke = np.copy(file['tasks']['Spectrum Kinetic Energy'])
             
         return ke
+    
+    def load_real_data(self):
+        with h5py.File(self.file_path, mode='r') as file:
+            ## Load data sets ##
+            ke = np.copy(file['tasks']['Real Kinetic Energy'])
+            
+        return ke
+    
+    def average_over_time(self,mode):
         
-    def average_over_time(self, file_path):
-        
-        data = self.load_data(file_path)
+        if mode == 's':
+            data = self.load_spectral_data()
+        elif mode == 'r':
+            data = self.load_real_data()
+        else:
+            print("Choose either r for real or s for spectral.")
+            return None
         array = np.zeros(np.shape(data)[1])
         
         for i in range(np.shape(data)[0]):
-            print(i)
             kep = helper_2d(data[i,:,:]).average_over_z()
             array += kep
         return array/np.shape(data)[0]
         
+        
+    def sum_over_domain(self, mode):
+    
+        array = []
+        
+        if mode == 's':
+            data = self.load_spectral_data()
+            for lines in data:
+                array.append(np.sum(helper_2d(lines).return_absolute()))
+            
+            return np.array(array)
+        elif mode == 'r':
+            data = self.load_real_data()
+            for lines in data:
+                array.append(np.sum(lines))
+            
+            return np.array(array)
+        else:
+            print("Choose either r for real or s for spectral.")
+            return None
+    
+ 
+        
+            
+            
+
     
         

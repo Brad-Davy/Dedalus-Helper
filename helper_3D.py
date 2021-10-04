@@ -86,9 +86,34 @@ class plotting:
         plt.contourf(x[:,:,0],y[:,:,0],t[:,:,0],100, cmap = 'coolwarm', alpha = 1)
         color_quiver_plot(4,4)
             
+            
+                
+    def plotly_plot(self, temperature, u, v, w, time_step,aspect_ratio):
+    
+    
+        import plotly.graph_objects as go
         
+        x, y, z = np.meshgrid(np.linspace(0, 2*np.pi,32),
+                      np.linspace(0, 2*np.pi,32),
+                      np.linspace(0, 1, 16))
+                      
         
+                      
+        u = u[time_step]
+        v = v[time_step]
+        w = w[time_step]*10
+        t = temperature[time_step]
+        scene = dict(aspectratio=dict(x=1, y=1, z=1/(2*np.pi)))
+        fig = go.Figure(
+            data = go.Cone(x = x.reshape(-1),y = y.reshape(-1), z = z.reshape(-1), u = u.reshape(-1), v = v.reshape(-1), w = w.reshape(-1), cmin = 0, cmax = 300, showscale = False, sizeref=3,colorscale='thermal', color = t.reshape(-1)),
+            
+            layout = go.Layout(
+                width = 1920,
+                height = 1000,
+                scene = scene,))
+
+        fig.write_html('first_figure.html', auto_open=True)
+                
+    
         
-        
-        
-        
+
