@@ -30,16 +30,19 @@ class Nusselt:
     
         " Nusselt number is given by "
         
-        nusselt = self.load_data(self.file_path)
+        nusselt = self.load_data()
 
         for lines in nusselt:
                 self.time_series.append(np.average(lines))
+                
+        return self.time_series
 
     def determine_NUMBER(self):
     
         " Nusselt number is given by "
         
-        self.determine_time_series(self.file_path) # updates the time series array
+        self.determine_time_series() # updates the time series array
+        print(self.time_series)
         self.NUMBER = np.average(self.time_series) # Sets the number variable
 
     def get_NUMBER(self):
@@ -104,8 +107,7 @@ class Peclet:
         
    
         if len(np.shape(u)) == 2:
-            summation = (u**2 + w**2)
-            return np.average(summation)
+            return np.average((u**2 + w**2)**0.5)
         else:
             pass
 

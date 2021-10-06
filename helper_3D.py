@@ -9,6 +9,9 @@ import numpy as np
 from DedalusHelper.helper_2D import Data as Data2D
 import sys,os
 import matplotlib.pyplot as plt
+import h5py
+from vtk.util import numpy_support
+import vtk
 #sys.path.append(os.getcwd()) Append the current working directory to path
 
 
@@ -115,5 +118,3 @@ class plotting:
         fig.write_html('first_figure.html', auto_open=True)
                 
     
-        
-
