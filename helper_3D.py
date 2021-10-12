@@ -43,6 +43,12 @@ class Data:
         data = Data2D(data)
         data.temperature_plot()
         
+    def rotate_data(self):
+        
+        " Returns the data. "
+        
+        return np.rot90(self.data, k=1, axes=(0, 2))
+        
 class plotting:
 
     def __init__(self):

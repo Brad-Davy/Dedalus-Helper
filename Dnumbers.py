@@ -34,7 +34,6 @@ class Nusselt:
 
         for lines in nusselt:
                 self.time_series.append(np.average(lines))
-                
         return self.time_series
 
     def determine_NUMBER(self):
@@ -96,30 +95,57 @@ class Peclet:
 
         with h5py.File(self.file_path, mode='r') as file:
             # Load datasets
-            u = np.copy(file['tasks']['u'])
-            w = np.copy(file['tasks']['w'])
-        return u, w
+            Peclet = np.copy(file['tasks']['Peclet'])
+            z = np.copy(file['tasks']['z'])[0]
+            z = z[0]
+            
+        return Peclet, z
         
-        
-    def return_peclet(self,u,w):
-        
-        " Returns a peclet number for a given time step. "
-        
-   
-        if len(np.shape(u)) == 2:
-            return np.average((u**2 + w**2)**0.5)
-        else:
-            pass
 
+    def integrate(self,z,data):
     
+        integration = 0
+        
+        for index,lines in enumerate(data):
+            
+            if index < len(data)-1:
+            
+                contribution = (z[index+1] - z[index])*0.5*(data[index]+data[index+1])
+                integration += contribution
+        
+        return integration
+    
+    
+    def return_peclet(self,Peclet,z):
+        
+            " Returns a peclet number for a given time step. "
+            
+            if len(np.shape(Peclet)) == 2:
+                
+                for lines in Peclet:
+                    print(np.shape(lines))
+                
+            else:
+                pass
     
 
     def determine_time_series(self):
     
-        u,w = self.load_data()
-        for index in range(np.shape(u)[0]):
-            p = self.return_peclet(u[index],w[index])
-            self.time_series.append(p)
+        Peclet, z = self.load_data()
+        
+        int_ar = []
+        
+        for lines in Peclet:
+            
+            integrate_array = []
+            
+            for line in lines:
+                integrate_array.append(self.integrate(z,line))
+                
+            int_ar.append(np.average(integrate_array))
+        
+        self.time_series = int_ar
+                
         return np.array(self.time_series)
 
     def get_NUMBER(self):
@@ -150,8 +176,7 @@ class KineticEnergy:
         with h5py.File(self.file_path, mode='r') as file:
             ## Load data sets ##
             ke = np.copy(file['tasks']['Spectrum Kinetic Energy'])
-            
-        return ke
+        return ke[1:,:,:]
     
     def load_real_data(self):
         with h5py.File(self.file_path, mode='r') as file:
