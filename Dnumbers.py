@@ -1,6 +1,7 @@
 import numpy as np
 import h5py
 from DedalusHelper.spectral import helper_2d
+from tqdm import tqdm
 
 ## All classes in this module require that the appropriate subsitutions are made when running the simmulations ##
 class Nusselt:
@@ -135,7 +136,7 @@ class Peclet:
         
         int_ar = []
         
-        for lines in Peclet:
+        for lines in tqdm(Peclet):
             
             integrate_array = []
             
