@@ -12,8 +12,17 @@ def return_time_derivative(array_1, array_2, dt: float) -> 'Array of arrays':
     return time_derivative, new_array
 
 
+def append_run_file(file_path: str, message: str):
 
+    file = open(file_path,'a')
+    file.write(message+'\n')
+    file.close()
 
+def clear_run_file(file_path: str):
+
+    file = open(file_path,'w')
+    file.write('')
+    file.close()
 
 if __name__ == '__main__':
     pass
