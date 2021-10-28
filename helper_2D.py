@@ -102,7 +102,7 @@ class Data(base):
         self.nusselt_number = 1
         base.__init__(self)
 
-    def temperature_plot(self):
+    def temperature_plot(self, color_bar = True):
         
         " Creates a temperature plot using the imshow library. "
         
@@ -110,7 +110,10 @@ class Data(base):
         plt.imshow(self.data,cmap='coolwarm',interpolation = 'bicubic')
         plt.rcParams['font.family'] = 'Serif'
         plt.rcParams['font.size'] = 18
-        plt.colorbar()
+        if color_bar == True:
+            plt.colorbar()
+        else:
+            pass
         plt.show()
         
         
@@ -212,6 +215,20 @@ class Data(base):
     def return_data(self):
         return self.data
         
+        
+    def return_mean_field(self):
+    
+        data = np.rot90(self.data, k=1, axes=(0, 1))
+        arr = [np.average(lines) for lines in data]
+        Arr = np.zeros(np.shape(data))
+
+        for idx,values in enumerate(arr):
+            Arr[idx,:] = np.ones(np.shape(data)[1])*values
+        
+        return Arr
+        
+    def return_fluctuating_field(self, mean_field):
+        return np.rot90(self.data, k=1, axes=(0, 1)) - mean_field
 
 class RawData(base):
     

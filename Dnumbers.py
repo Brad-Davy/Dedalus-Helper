@@ -133,21 +133,7 @@ class Peclet:
     def determine_time_series(self):
     
         Peclet, z = self.load_data()
-        
-        int_ar = []
-        
-        for lines in tqdm(Peclet):
-            
-            integrate_array = []
-            
-            for line in lines:
-                integrate_array.append(self.integrate(z,line))
-                
-            int_ar.append(np.average(integrate_array))
-        
-        self.time_series = int_ar
-                
-        return np.array(self.time_series)
+        return Peclet[:,0,0]
 
     def get_NUMBER(self):
     
@@ -201,6 +187,7 @@ class KineticEnergy:
             kep = helper_2d(data[i,:,:]).average_over_z()
             array += kep
         return array/np.shape(data)[0]
+        
         
         
     def sum_over_domain(self, mode):
