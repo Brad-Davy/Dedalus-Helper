@@ -116,7 +116,19 @@ class Data(base):
             pass
         plt.show()
         
+    def contour_plot(self, color_bar = True):
         
+        " Creates a temperature plot using the imshow library. "
+        
+        self.data = np.rot90(self.data, k=1, axes=(0, 1))
+        plt.imshow(self.data,cmap='coolwarm',interpolation = 'bicubic')
+        plt.rcParams['font.family'] = 'Serif'
+        plt.rcParams['font.size'] = 18
+        if color_bar == True:
+            plt.colorbar()
+        else:
+            pass
+        plt.show()
     def return_shape(self):
         
         " Returns the shape of the data. "

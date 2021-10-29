@@ -25,25 +25,6 @@ class Nusselt:
             data = np.copy(file['tasks']['Nusselt']) # Load datasets
         return data
     
-        
-
-    def determine_time_series(self):
-    
-        " Nusselt number is given by "
-        
-        nusselt = self.load_data()
-
-        for lines in nusselt:
-                self.time_series.append(np.average(lines))
-        return self.time_series
-
-    def determine_NUMBER(self):
-    
-        " Nusselt number is given by "
-        
-        self.determine_time_series() # updates the time series array
-        print(self.time_series)
-        self.NUMBER = np.average(self.time_series) # Sets the number variable
 
     def get_NUMBER(self):
     
@@ -54,7 +35,8 @@ class Nusselt:
     def get_time_series(self):
     
         " getter for NUMBER"
-        return self.time_series
+        data = self.load_data()
+        return data[:,0,0]
         
         
     def determine_derivative(self):

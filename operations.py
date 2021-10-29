@@ -1,6 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def convert_to_array(data: str):
+    x = []
+    y = []
+    for lines in data.split('\n'):
+        
+        try:
+            x.append(float(lines.split(',')[0]))
+            y.append(float(lines.split(',')[1]))
+        except:
+            print("The following was not added to the array {value}.".format(value = lines))
+    return x,y
+
+
 def return_time_derivative(array_1, array_2, dt: float) -> 'Array of arrays':
     
     " Given 2 arrays a backwards difference approximation of the time derivative is returned "
