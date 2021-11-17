@@ -2,31 +2,44 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
 import os
-
+from tqdm import tqdm
 class animation:
     
-    def __init__(self, data, fig):
-        self.data = data
-        os.system('rm -r /opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img')
-        os.system('mkdir /opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img')
+    def __init__(self, data, file_path: str, z):
     
-        
+        self.data = data
+        self.file_path = file_path
+        self.z = z
+
         
     def create_images(self) -> 'Out Images':
     
         " Given the time dependent data this function saves them as images "
 
         counter = 0
-        for lines in self.data:
-            
+        fig = plt.figure(figsize = (8,4))
+        for lines in tqdm(self.data):
+
+            lines = np.rot90(lines, k=3, axes=(0, 1))
+            ax = fig.add_subplot(111)
+            plt.rcParams['font.family'] = 'Serif'
+            plt.rcParams['font.size'] = 18
+            ax.set_aspect('equal')
+            X,Y = np.meshgrid(np.linspace(0,2,np.shape(lines)[1]),self.z)
+            plt.contourf(X, Y, lines, 40, cmap='bwr')
+            plt.colorbar()
+                
             if counter < 10:
-                file_path = '/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img/000{counter}.png'.format(counter = counter)
+                filepath = 'img/000{counter}.png'.format(counter = counter)
             elif 9 < counter < 100:
-                file_path = '/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img/00{counter}.png'.format(counter = counter)
+                filepath = 'img/00{counter}.png'.format(counter = counter)
             else:
-                file_path = '/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img/0{counter}.png'.format(counter = counter)
-            fig.savefig(file_path, dpi = 600)
+                filepath = 'img/0{counter}.png'.format(counter = counter)
+                
+                
+            fig.savefig(filepath, dpi = 600)
             counter = counter + 1
+            plt.clf()
                 
         
     def check_data(func):
@@ -58,12 +71,13 @@ class animation:
     
         import imageio
         import glob
-        filenames = sorted(glob.glob('/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/img/*.png'))
-        
+        filenames = sorted(glob.glob('img/*.png'))
+        print(filenames)
         images = []
-        for filename in filenames:
+        for filename in tqdm(filenames):
             images.append(imageio.imread(filename))
-        imageio.mimsave('/opt/anaconda3/envs/dedalus/lib/python3.8/site-packages/DedalusHelper/video/animation.gif', images)
+            
+        imageio.mimsave('animation.gif', images)
         
     def return_all_data(self):
         return self.data

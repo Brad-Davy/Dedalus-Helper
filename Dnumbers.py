@@ -24,6 +24,16 @@ class Nusselt:
         
             data = np.copy(file['tasks']['Nusselt']) # Load datasets
         return data
+        
+    def load_spectral_data(self):
+    
+        from dedalus.tools import post
+
+        with h5py.File(self.file_path, mode='r') as file:
+        
+            data = np.copy(file['tasks']['Nusselt Spectrum']) # Load datasets
+        return data
+
     
 
     def get_NUMBER(self):
@@ -37,6 +47,22 @@ class Nusselt:
         " getter for NUMBER"
         data = self.load_data()
         return data[:,0,0]
+        
+    def average_over_time(self,mode):
+        
+        if mode == 's':
+            data = self.load_spectral_data()
+        elif mode == 'r':
+            data = self.load_data()
+        else:
+            print("Choose either r for real or s for spectral.")
+            return None
+        array = np.zeros(np.shape(data)[1])
+        
+        for i in range(np.shape(data)[0]):
+            kep = helper_2d(data[i,:,:]).average_over_z()
+            array += kep
+        return array/np.shape(data)[0]
         
         
     def determine_derivative(self):
@@ -77,12 +103,9 @@ class Peclet:
         from dedalus.tools import post
 
         with h5py.File(self.file_path, mode='r') as file:
-            # Load datasets
-            Peclet = np.copy(file['tasks']['Peclet'])
-            z = np.copy(file['tasks']['z'])[0]
-            z = z[0]
-            
-        return Peclet, z
+        
+            data = np.copy(file['tasks']['Peclet']) # Load datasets
+        return data
         
 
     def integrate(self,z,data):
@@ -110,7 +133,12 @@ class Peclet:
                 
             else:
                 pass
+                
+    def get_time_series(self):
     
+        " getter for NUMBER"
+        data = self.load_data()
+        return data[:,0,0]
 
     def determine_time_series(self):
     
@@ -122,11 +150,6 @@ class Peclet:
         " getter for NUMBER "
         return self.NUMBER
     
-        
-    def get_time_series(self):
-    
-        " getter for time_series "
-        return self.time_series
         
 
 

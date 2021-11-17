@@ -116,19 +116,21 @@ class Data(base):
             pass
         plt.show()
         
-    def contour_plot(self, color_bar = True):
+    def contour_plot(self,Ra,x,z, color_bar = True):
         
         " Creates a temperature plot using the imshow library. "
-        
-        self.data = np.rot90(self.data, k=1, axes=(0, 1))
-        plt.imshow(self.data,cmap='coolwarm',interpolation = 'bicubic')
+        fig = plt.figure(figsize = (8,4))
+        ax = fig.add_subplot(111)
         plt.rcParams['font.family'] = 'Serif'
         plt.rcParams['font.size'] = 18
-        if color_bar == True:
-            plt.colorbar()
-        else:
-            pass
+        ax.set_aspect('equal')
+        self.data = np.rot90(self.data, k=3, axes=(0, 1))
+        X,Y = np.meshgrid(z,x)
+        plt.contourf(X, Y, self.data/Ra, 40, cmap='coolwarm')
+        plt.colorbar()
         plt.show()
+        
+        
     def return_shape(self):
         
         " Returns the shape of the data. "
@@ -241,6 +243,15 @@ class Data(base):
         
     def return_fluctuating_field(self, mean_field):
         return np.rot90(self.data, k=1, axes=(0, 1)) - mean_field
+        
+    def average_over_z(self):
+    
+        " Averages over the z domain. "
+
+        array = [np.average(lines) for lines in self.data]
+        return array
+       
+
 
 class RawData(base):
     
